@@ -6,9 +6,13 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 jobs:
   build-test-security:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -20,19 +24,13 @@ jobs:
         with:
           node-version: 20
 
-      - name: Run Application
-        run: node app.js
-
-      - name: Security Scan
+      - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: javascript
 
-      - name: Analyze Security
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
-      - name: Build
-        run: echo "Build successful"
-
-      - name: Deploy
-        run: echo "Deployment successful"
+      - name: Run Application
+        run: node app.js
